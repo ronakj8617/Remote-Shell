@@ -4,11 +4,16 @@
 
 #include "client.hpp"
 
+#include "colors.hpp"
+
 void run_client(const std::string &host, int port) {
     signal(SIGINT, handle_sigint); // Register handler
 
     int sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (sock < 0) { perror("socket"); return; }
+    if (sock < 0) {
+        perror("socket");
+        return;
+    }
 
     global_socket = sock; // Register socket for cleanup
 
@@ -17,7 +22,7 @@ void run_client(const std::string &host, int port) {
     serv_addr.sin_port = htons(port);
     inet_pton(AF_INET, host.c_str(), &serv_addr.sin_addr);
 
-    if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
+    if (connect(sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
         perror("connect");
         return;
     }
@@ -28,7 +33,7 @@ void run_client(const std::string &host, int port) {
     char buffer[4096];
 
     while (true) {
-        std::cout << "remote-shell> ";
+        std::cout << RED << "remote-shell> " << BLUE;
         std::getline(std::cin, input);
         if (input == "exit" || std::cin.eof()) break;
 

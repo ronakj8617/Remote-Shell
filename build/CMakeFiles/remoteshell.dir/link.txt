@@ -1,0 +1,1 @@
+/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/remoteshell.dir/src/main.cpp.o CMakeFiles/remoteshell.dir/src/server/server.cpp.o CMakeFiles/remoteshell.dir/src/client/client.cpp.o CMakeFiles/remoteshell.dir/src/handle_signals.cpp.o -o remoteshell  /opt/homebrew/lib/libboost_system.dylib /opt/homebrew/lib/libboost_thread.dylib

@@ -4,6 +4,8 @@
 
 #include "server.hpp"
 
+#include "colors.hpp"
+
 
 void run_server(int port) {
     signal(SIGINT, handle_sigint); // Register handler
@@ -41,7 +43,7 @@ void run_server(int port) {
 
     global_server_fd = server_fd;
 
-    std::cout << "[Server] Waiting for connections...\n";
+    std::cout << RED << "[Server] Waiting for connections...\n";
 
     client_fd = accept(server_fd, (struct sockaddr *) &address, &addrlen);
     if (client_fd < 0) {

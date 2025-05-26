@@ -4,18 +4,20 @@
 
 #include "handle_signals.hpp"
 
+#include "colors.hpp"
+
 std::atomic<int> global_server_fd = -1;
 std::atomic<int> global_client_fd = -1;
 std::atomic<int> global_socket = -1; // Optional
 
 void handle_sigint(int sig) {
-    std::cout << "\n[!] Caught SIGINT (Ctrl+C), shutting down...\n";
+    std::cout << YELLOW << "\n[!] Caught SIGINT (Ctrl+C), shutting down...\n";
 
     std::unordered_set<int> closed;
     auto safe_close = [&](int fd, const std::string &name) {
         if (fd != -1 && closed.count(fd) == 0) {
             close(fd);
-            std::cout << "[!] " << name << " closed.\n";
+            std::cout << CYAN << "[!] " << name << " closed.\n";
             closed.insert(fd);
         }
     };
