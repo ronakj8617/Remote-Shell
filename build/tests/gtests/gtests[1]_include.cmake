@@ -1,5 +1,0 @@
-if(EXISTS "/Users/ronak/CLionProjects/Remote-Shell/build/tests/gtests/gtests[1]_tests.cmake")
-  include("/Users/ronak/CLionProjects/Remote-Shell/build/tests/gtests/gtests[1]_tests.cmake")
-else()
-  add_test(gtests_NOT_BUILT gtests_NOT_BUILT)
-endif()

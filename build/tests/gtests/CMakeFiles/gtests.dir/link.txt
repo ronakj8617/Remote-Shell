@@ -1,1 +1,0 @@
-/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/gtests.dir/gtest_main.cpp.o -o gtests  ../../lib/libgtest.a ../../lib/libgtest_main.a ../../lib/libgtest.a

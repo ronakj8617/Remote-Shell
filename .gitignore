@@ -1,0 +1,68 @@
+# Build artifacts
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/Makefile
+/cmake-build-debug
+
+# Executable files
+/pubsub
+/tests/gtests/gtests
+/tests/tests
+
+# Test-related
+Testing/
+test_detail.xml
+*.gcno
+*.gcda
+*.gcov
+
+# Logs and output
+*.log
+*.out
+*.err
+
+# Generated files
+*.dSYM/
+*.o
+*.obj
+*.so
+*.a
+*.lib
+*.dll
+*.exe
+
+
+# IDE & Editor specific files
+/.idea/
+.vscode/
+.idea/
+*.swp
+*.swo
+*.user
+*.sln
+*.vcxproj*
+compile_commands.json
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Git-specific
+.gitignore
+*.orig
+
+# External dependencies (optional)
+external/crow/
+external/asio/
+
+# Python virtual environments or bytecode (if any tooling used Python)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+
+SSH_KEY
+SSH_KEY.pub
