@@ -10,12 +10,9 @@ enable_testing()
 
 include(FetchContent)
 
-# ======================================
-# Fetch Crow
-# ======================================
-# ======================================
-# Fetch Crow (Amalgamated version)
-# ======================================
+# ====================================== #
+# Fetch Crow (Amalgamated version)       #
+# ====================================== #
 set(CROW_AMALGAMATE ON)
 FetchContent_Declare(
         Crow
@@ -57,6 +54,9 @@ find_package(Boost REQUIRED COMPONENTS system thread)
 
 add_executable(remoteshell
         src/main.cpp
+        src/server/server.cpp
+        src/client/client.cpp
+        src/handle_signals.cpp
         include/cors.h
 )
 
