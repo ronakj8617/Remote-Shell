@@ -11,8 +11,11 @@
 
 #include "cors.h"
 
+using json = nlohmann::json;
 
 int main() {
+    auto start = std::chrono::high_resolution_clock::now();
+
     signal(SIGPIPE, SIG_IGN); // Ignoring SIGPIPE globally
 
     crow::App<CORS> app;
@@ -33,13 +36,36 @@ int main() {
         return crow::response(200, nlohmann::json({{"message", "Ping successful"}}).dump());
     });
 
+    CROW_ROUTE(app, "/registerClient").methods("POST"_method, "OPTIONS"_method)([&](const crow::request &req) {
+        if (req.method == "OPTIONS"_method) return allow_cors();
+        auto body = nlohmann::json::parse(req.body);
+        std::string id = body["id"];
+        std::string password = body["password"];
+
+        if (clients.find(id) != clients.end())
+            return crow::response(400, json({{"message", "Id already exists"}}).dump());
+
+        clients[id] = password;
+        std::cout << CYAN << clients.count(id);
+        return crow::response(404, json({{"message", "Client registered"}}).dump());
+    });
+
+    //work in progress
+    CROW_ROUTE(app, "/sendCommand").methods("POST"_method)([&](const crow::request &req) {
+        std::string id = json::parse(req.body)["id"];
+        if (clients.find(id) == clients.end())
+            return crow::response(
+                404, json({{"message", "User is not registered."}}));
+
+        std::string command = json::parse(req.body)["command"];
+    });
+
     std::thread restThread([&app, restPort] {
         app.port(restPort).multithreaded().run();
     });
     restThread.join();
 
     int shellPort = 8080;
-    auto start = std::chrono::high_resolution_clock::now();
 
     // Start server in a background thread
     std::thread server_thread(run_server, shellPort);
@@ -53,6 +79,5 @@ int main() {
     server_thread.join();
     auto end = std::chrono::high_resolution_clock::now();
     auto time_taken = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
-    std::cout << "Time taken:" << time_taken;
-
+    std::cout << CYAN << "Time taken:" << time_taken;
 }
