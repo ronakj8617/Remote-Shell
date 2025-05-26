@@ -14,15 +14,22 @@ void run_server(int port) {
     char buffer[1024] = {0};
 
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_fd < 0) { perror("socket"); return; }
+    if (server_fd < 0) {
+        perror("socket");
+        return;
+    }
 
-    global_socket = server_fd;  // Register for SIGINT cleanup
+    int opt = 1;
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        perror("setsockopt");
+        return;
+    }
 
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(port);
 
-    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
+    if (bind(server_fd, (struct sockaddr *) &address, sizeof(address)) < 0) {
         perror("bind");
         return;
     }
@@ -32,12 +39,17 @@ void run_server(int port) {
         return;
     }
 
+    global_server_fd = server_fd;
+
     std::cout << "[Server] Waiting for connections...\n";
 
-    client_fd = accept(server_fd, (struct sockaddr*)&address, &addrlen);
-    if (client_fd < 0) { perror("accept"); return; }
+    client_fd = accept(server_fd, (struct sockaddr *) &address, &addrlen);
+    if (client_fd < 0) {
+        perror("accept");
+        return;
+    }
 
-    global_socket = client_fd;  // Update for client socket
+    global_client_fd = client_fd;
 
     while (true) {
         memset(buffer, 0, sizeof(buffer));

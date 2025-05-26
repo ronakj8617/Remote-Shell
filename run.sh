@@ -27,7 +27,7 @@ fi
 #fi
 
 if [ ! -f ./remoteshell ]; then
-  echo "❌ Build succeeded but pubsub binary not found!"
+  echo "❌ Build succeeded but remote shell binary not found!"
   exit 1
 fi
 
