@@ -2,11 +2,16 @@
 // Created by Ronak on 26/05/25.
 //
 
+#define CROW_MAIN
+#include "crow.h"
 #include "main.hpp"
 #include "./client/client.hpp"
 #include "./server/server.hpp"
+#include <nlohmann/json.hpp>
+
 
 int main() {
+
     signal(SIGPIPE, SIG_IGN); // Ignoring SIGPIPE globally
 
     int port = 8080;

@@ -66,10 +66,17 @@ target_link_libraries(remoteshell PRIVATE
         Boost::thread
 )
 
+#target_include_directories(remoteshell PRIVATE
+#        ${Boost_INCLUDE_DIR}
+#        ${CMAKE_CURRENT_SOURCE_DIR}/include
+#)
+
 target_include_directories(remoteshell PRIVATE
         ${Boost_INCLUDE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${crow_SOURCE_DIR}/include
 )
+
 
 # Doxygen Documentation setup
 find_package(Doxygen QUIET)
