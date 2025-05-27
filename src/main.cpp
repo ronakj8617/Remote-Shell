@@ -47,7 +47,7 @@ int main() {
 
         clients[id] = password;
         std::cout << CYAN << clients.count(id);
-        return crow::response(404, json({{"message", "Client registered"}}).dump());
+        return crow::response(200, json({{"message", "Client registered"}}).dump());
     });
 
     //work in progress
@@ -55,9 +55,11 @@ int main() {
         std::string id = json::parse(req.body)["id"];
         if (clients.find(id) == clients.end())
             return crow::response(
-                404, json({{"message", "User is not registered."}}));
+                404, json({{"message", "User is not registered."}}).dump());
 
         std::string command = json::parse(req.body)["command"];
+        return crow::response(
+            404, json({{"message", "User is not registered."}}).dump());
     });
 
     std::thread restThread([&app, restPort] {
