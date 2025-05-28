@@ -10,6 +10,7 @@ std::pair<int, std::string> run_client(std::string clientId, std::string command
     signal(SIGINT, handle_sigint); // Register handler
 
     int sock = socket(AF_INET, SOCK_STREAM, 0);
+
     if (sock < 0) {
         perror("socket");
         return {-1, "Error creating socket"};
@@ -29,15 +30,11 @@ std::pair<int, std::string> run_client(std::string clientId, std::string command
 
     std::cout << "[Client] Connected to server.\n";
 
-    std::string input;
     char buffer[4096];
 
     std::cout << RED << "remote-shell> " << BLUE;
-    // std::getline(std::cin, input);
-    // if (input == "exit" || std::cin.eof()) break;
-    input = "ls\n";
 
-    send(sock, input.c_str(), input.length(), 0);
+    send(sock, commands.c_str(), commands.length(), 0);
 
     memset(buffer, 0, sizeof(buffer));
     ssize_t bytes = read(sock, buffer, sizeof(buffer));
@@ -47,11 +44,7 @@ std::pair<int, std::string> run_client(std::string clientId, std::string command
 
         // std::cout << buffer;
     }
+    close(sock);
 
-    std::string ret(buffer);
-    // Trim trailing newline (for cleaner output)
-    if (!ret.empty() && ret.back() == '\n') {
-        ret.pop_back();
-    }
-    return {0, ret};
+    return {0, buffer};
 }

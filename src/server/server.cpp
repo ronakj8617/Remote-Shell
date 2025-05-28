@@ -4,16 +4,16 @@
 
 #include "server.hpp"
 
+#include <thread>
+
 #include "colors.hpp"
 
-
 void run_server(int port) {
-    signal(SIGINT, handle_sigint); // Register handler
+    signal(SIGINT, handle_sigint);
 
-    int server_fd, client_fd;
+    int server_fd;
     struct sockaddr_in address;
     socklen_t addrlen = sizeof(address);
-    char buffer[1024] = {0};
 
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_fd < 0) {
@@ -36,42 +36,45 @@ void run_server(int port) {
         return;
     }
 
-    if (listen(server_fd, 3) < 0) {
+    if (listen(server_fd, 10) < 0) {
         perror("listen");
         return;
     }
 
     global_server_fd = server_fd;
-
-    std::cout << RED << "[Server] Waiting for connections...\n";
-
-    client_fd = accept(server_fd, (struct sockaddr *) &address, &addrlen);
-    if (client_fd < 0) {
-        perror("accept");
-        return;
-    }
-
-    global_client_fd = client_fd;
+    std::cout << RED << "[Server] Listening on port " << port << "...\n";
 
     while (true) {
-        memset(buffer, 0, sizeof(buffer));
-        ssize_t bytes = read(client_fd, buffer, 1024);
-        if (bytes <= 0) break;
-
-        std::string cmd(buffer);
-        std::string result = execute_command(cmd);
-
-        size_t total_sent = 0;
-        while (total_sent < result.size()) {
-            ssize_t sent = send(client_fd, result.c_str() + total_sent, result.size() - total_sent, 0);
-            if (sent <= 0) break;
-            total_sent += sent;
+        int client_fd = accept(server_fd, (struct sockaddr *) &address, &addrlen);
+        if (client_fd < 0) {
+            perror("accept");
+            continue;
         }
+
+        std::thread([client_fd]() {
+            char buffer[1024];
+            memset(buffer, 0, sizeof(buffer));
+
+            ssize_t bytes = read(client_fd, buffer, sizeof(buffer));
+            if (bytes > 0) {
+                std::string cmd(buffer);
+                std::string result = execute_command(cmd);
+
+                size_t total_sent = 0;
+                while (total_sent < result.size()) {
+                    ssize_t sent = send(client_fd, result.c_str() + total_sent, result.size() - total_sent, 0);
+                    if (sent <= 0) break;
+                    total_sent += sent;
+                }
+            }
+
+            close(client_fd); // clean up after client
+        }).detach(); // detached thread per client
     }
 
-    close(client_fd);
     close(server_fd);
 }
+
 
 std::string execute_command(const std::string &cmd) {
     std::array<char, 128> buffer;

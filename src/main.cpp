@@ -72,6 +72,12 @@ int main() {
         });
 
         exec_thread.join(); // Optional: or detach and return 202 Accepted
+        // if (result.size() > 0)
+        //     exec_thread.detach();
+        if (ret < 0) {
+            return crow::response(
+                404, json({{"message", result}}).dump());
+        }
 
         return crow::response(
             200, json({{"message", result}}).dump());
