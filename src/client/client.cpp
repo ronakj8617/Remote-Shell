@@ -36,15 +36,17 @@ std::pair<int, std::string> run_client(std::string clientId, std::string command
 
     send(sock, commands.c_str(), commands.length(), 0);
 
-    memset(buffer, 0, sizeof(buffer));
-    ssize_t bytes = read(sock, buffer, sizeof(buffer));
-    if (bytes <= 0) {
-        close(sock);
-        return {-3, "Error reading from socket"};
+    std::string result;
+    ssize_t bytes;
+    do {
+        memset(buffer, 0, sizeof(buffer));
+        bytes = read(sock, buffer, sizeof(buffer));
+        if (bytes > 0)
+            result += std::string(buffer, bytes);
+    } while (bytes > 0);
 
-        // std::cout << buffer;
-    }
     close(sock);
 
-    return {0, buffer};
+    if (result.empty()) return {-3, "No output received from server"};
+    return {0, result};
 }

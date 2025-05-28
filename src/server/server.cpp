@@ -79,7 +79,9 @@ void run_server(int port) {
 std::string execute_command(const std::string &cmd) {
     std::array<char, 128> buffer;
     std::string result;
-    FILE *pipe = popen(cmd.c_str(), "r");
+    // FILE *pipe = popen(cmd.c_str(), "r");
+    FILE *pipe = popen((cmd + " 2>&1").c_str(), "r"); // Redirect stderr to stdout
+
     if (!pipe) return "Error running command";
 
     while (fgets(buffer.data(), buffer.size(), pipe) != nullptr) {
