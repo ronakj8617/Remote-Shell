@@ -32,17 +32,21 @@ void run_client(const std::string &host, int port) {
     std::string input;
     char buffer[4096];
 
-    while (true) {
+    // while (true)
+    {
         std::cout << RED << "remote-shell> " << BLUE;
-        std::getline(std::cin, input);
-        if (input == "exit" || std::cin.eof()) break;
+        // std::getline(std::cin, input);
+        // if (input == "exit" || std::cin.eof()) break;
+        input = "ls\n";
 
         send(sock, input.c_str(), input.length(), 0);
 
         memset(buffer, 0, sizeof(buffer));
         ssize_t bytes = read(sock, buffer, sizeof(buffer));
-        if (bytes <= 0) break;
-
+        if (bytes <= 0) {
+            close(sock);
+            return;
+        }
         std::cout << buffer;
     }
 
