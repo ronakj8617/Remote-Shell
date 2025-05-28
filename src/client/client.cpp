@@ -6,13 +6,13 @@
 
 #include "colors.hpp"
 
-void run_client(const std::string &host, int port) {
+std::pair<int, std::string> run_client(std::string clientId, std::string commands, const std::string &host, int port) {
     signal(SIGINT, handle_sigint); // Register handler
 
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("socket");
-        return;
+        return {-1, "Error creating socket"};
     }
 
     global_socket = sock; // Register socket for cleanup
@@ -24,7 +24,7 @@ void run_client(const std::string &host, int port) {
 
     if (connect(sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
         perror("connect");
-        return;
+        return {-2, "Connection failed"};
     }
 
     std::cout << "[Client] Connected to server.\n";
@@ -32,23 +32,26 @@ void run_client(const std::string &host, int port) {
     std::string input;
     char buffer[4096];
 
-    // while (true)
-    {
-        std::cout << RED << "remote-shell> " << BLUE;
-        // std::getline(std::cin, input);
-        // if (input == "exit" || std::cin.eof()) break;
-        input = "ls\n";
+    std::cout << RED << "remote-shell> " << BLUE;
+    // std::getline(std::cin, input);
+    // if (input == "exit" || std::cin.eof()) break;
+    input = "ls\n";
 
-        send(sock, input.c_str(), input.length(), 0);
+    send(sock, input.c_str(), input.length(), 0);
 
-        memset(buffer, 0, sizeof(buffer));
-        ssize_t bytes = read(sock, buffer, sizeof(buffer));
-        if (bytes <= 0) {
-            close(sock);
-            return;
-        }
-        std::cout << buffer;
+    memset(buffer, 0, sizeof(buffer));
+    ssize_t bytes = read(sock, buffer, sizeof(buffer));
+    if (bytes <= 0) {
+        close(sock);
+        return {-3, "Error reading from socket"};
+
+        // std::cout << buffer;
     }
 
-    close(sock);
+    std::string ret(buffer);
+    // Trim trailing newline (for cleaner output)
+    if (!ret.empty() && ret.back() == '\n') {
+        ret.pop_back();
+    }
+    return {0, ret};
 }

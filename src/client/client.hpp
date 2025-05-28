@@ -8,4 +8,4 @@
 #include "./../handle_signals.hpp"
 #pragma once
 
-void run_client(const std::string& host = "127.0.0.1", int port = 8080);
+std::pair<int, std::string> run_client(std::string clientId, std::string commands, const std::string& host = "127.0.0.1", int port = 8080);

@@ -31,12 +31,7 @@ int main() {
     };
     int shellPort = 8080;
 
-    // Start server in a background thread
-    // Start client
-    // run_client("127.0.0.1", shellPort);
-
-    // Let server start up
-    // std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::thread server_thread(run_server, shellPort);
     // server_thread.join();
 
     CROW_ROUTE(app, "/ping").methods("GET"_method, "OPTIONS"_method)([&](const crow::request &req) {
@@ -63,22 +58,23 @@ int main() {
     // work in progress
     CROW_ROUTE(app, "/sendCommand").methods("POST"_method)([&](const crow::request &req) {
         std::string id = json::parse(req.body)["id"];
+        std::string commands = json::parse(req.body)["command"];
         if (clients.find(id) == clients.end())
             return crow::response(
                 404, json({{"message", "User is not registered."}}).dump());
 
-        close(global_server_fd);
-        close(global_client_fd);
-        std::thread server_thread(run_server, shellPort);
-        run_client();
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        server_thread.join();
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        std::string command = json::parse(req.body)["command"];
-        run_client("127.0.0.1", shellPort);
+
+        std::string result;
+        int ret;
+
+        std::thread exec_thread([&]() {
+            std::tie(ret, result) = run_client(id, commands, "127.0.0.1", shellPort);
+        });
+
+        exec_thread.join(); // Optional: or detach and return 202 Accepted
 
         return crow::response(
-            404, json({{"message", "User is not registered."}}).dump());
+            200, json({{"message", result}}).dump());
     });
 
 
