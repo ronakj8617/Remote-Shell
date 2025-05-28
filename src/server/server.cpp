@@ -75,12 +75,19 @@ void run_server(int port) {
     close(server_fd);
 }
 
-
 std::string execute_command(const std::string &cmd) {
+    std::string platform_cmd = cmd;
+
+#if defined(__APPLE__)
+    if (cmd.find("top") == 0) {
+        platform_cmd = "top -l 1"; // macOS friendly command
+    }
+#endif
+
     std::array<char, 128> buffer;
     std::string result;
-    // FILE *pipe = popen(cmd.c_str(), "r");
-    FILE *pipe = popen((cmd + " 2>&1").c_str(), "r"); // Redirect stderr to stdout
+    // FILE *pipe = popen(platform_cmd.c_str(), "r");
+    FILE *pipe = popen((platform_cmd + " 2>&1").c_str(), "r"); // Redirect stderr to stdout
 
     if (!pipe) return "Error running command";
 
