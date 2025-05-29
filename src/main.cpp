@@ -124,10 +124,10 @@ void signal_handler(int signal) {
 int main() {
     auto start = std::chrono::high_resolution_clock::now();
 
-    // signal(SIGPIPE, signal_handler);
-    // signal(SIGABRT, signal_handler);
-    // signal(SIGINT, signal_handler);
-    // signal(SIGTERM, signal_handler);
+    signal(SIGPIPE, signal_handler);
+    signal(SIGABRT, signal_handler);
+    signal(SIGINT, signal_handler);
+    signal(SIGTERM, signal_handler);
 
     crow::App<CORS> app;
 
