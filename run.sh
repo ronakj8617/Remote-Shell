@@ -8,6 +8,12 @@ clear
 echo "🧹 Cleaning previous CMake cache and build files..."
 rm -rf CMakeCache.txt CMakeFiles Makefile cmake_install.cmake build
 
+
+if ! docker build -t remote-shell-image .; then
+      echo "❌ Doccker build failed!"]
+      exit 1
+fi
+
 echo "📁 Creating build directory..."
 mkdir -p build
 cd build
@@ -33,3 +39,5 @@ fi
 
 echo "🚀 Running the remote shell..."
 ./remoteshell
+
+#docker system prune -f

@@ -1,10 +1,10 @@
+# Use Ubuntu as a base image
 FROM ubuntu:22.04
-LABEL authors="ronak"
 
-# Install bash and common tools
-RUN apt-get update && apt-get install -y bash iproute2 net-tools
+# Install basic shell tools
+RUN apt-get update && \
+    apt-get install -y bash coreutils && \
+    apt-get clean
 
-# Set default shell
-CMD ["bash"]
-
-ENTRYPOINT ["top", "-b"]
+# Default shell
+CMD ["/bin/bash"]

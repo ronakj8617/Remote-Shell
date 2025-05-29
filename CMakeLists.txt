@@ -91,6 +91,14 @@ if (DOXYGEN_FOUND)
             COMMENT "Generating API documentation with Doxygen"
             VERBATIM
     )
-else()
+else ()
     message(STATUS "Doxygen not found, 'doc_doxygen' target will not be available")
-endif()
+endif ()
+
+add_custom_target(
+        BuildDockerImage ALL
+        COMMAND ${CMAKE_COMMAND} -E echo "Building Docker image: remote-shell-image"
+        COMMAND docker build -t remote-shell-image ${CMAKE_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Running docker build to create remote-shell-image"
+)
