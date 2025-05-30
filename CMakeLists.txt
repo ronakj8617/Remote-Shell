@@ -52,31 +52,33 @@ add_subdirectory(tests/catch2)
 # Find Boost
 find_package(Boost REQUIRED COMPONENTS system thread)
 
-add_executable(remoteshell
-        src/main.cpp
+add_library(core_lib
+        src/commandExecutor.cpp
+        src/handle_signals.cpp
         src/server/server.cpp
         src/client/client.cpp
-        src/handle_signals.cpp
-        include/cors.h
 )
 
-# Update include directories
-target_link_libraries(remoteshell PRIVATE
+target_include_directories(core_lib PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(core_lib
         Boost::system
         Boost::thread
 )
 
-#target_include_directories(remoteshell PRIVATE
-#        ${Boost_INCLUDE_DIR}
-#        ${CMAKE_CURRENT_SOURCE_DIR}/include
-#)
-
-target_include_directories(remoteshell PRIVATE
-        ${Boost_INCLUDE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-        ${crow_SOURCE_DIR}/include
+add_executable(remoteshell
+        src/main.cpp
 )
 
+target_link_libraries(remoteshell
+        PRIVATE core_lib
+)
+
+target_include_directories(remoteshell PRIVATE
+        ${crow_SOURCE_DIR}/include
+)
 
 # Doxygen Documentation setup
 find_package(Doxygen QUIET)

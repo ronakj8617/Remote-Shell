@@ -8,7 +8,7 @@ clear
 echo "🧹 Cleaning previous CMake cache and build files..."
 rm -rf CMakeCache.txt CMakeFiles Makefile cmake_install.cmake build
 
-
+echo " 🔨 Building docker..."
 if ! docker build -t remote-shell-image .; then
       echo "❌ Doccker build failed!"]
       exit 1
@@ -27,10 +27,10 @@ if ! make; then
     exit 1
 fi
 
-#if ! ctest; then
-#      echo "❌ Test cases failed!"]
-#      exit 1
-#fi
+if ! ctest; then
+      echo "❌ Test cases failed!"]
+      exit 1
+fi
 
 if [ ! -f ./remoteshell ]; then
   echo "❌ Build succeeded but remote shell binary not found!"
