@@ -125,14 +125,13 @@ int main() {
     auto start = std::chrono::high_resolution_clock::now();
 
     signal(SIGPIPE, signal_handler);
-    signal(SIGABRT, signal_handler);
-    signal(SIGINT, signal_handler);
-    signal(SIGTERM, signal_handler);
+    signal(SIGABRT, signal_handler); //signal abort
+    signal(SIGINT, signal_handler); // signal interrupt
+    signal(SIGTERM, signal_handler); // signal terminated
+    signal(SIGFPE, signal_handler); // signal floating-point exception
 
     crow::App<CORS> app;
-
-    int restPort = 8081;
-    int shellPort = 8080;
+    int restPort = 8081, shellPort = 8080;
 
     auto allow_cors = []() {
         crow::response res;

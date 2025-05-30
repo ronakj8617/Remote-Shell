@@ -1,13 +1,13 @@
 # 🖥️ Remote Shell with Virtual Spaces
 
-A multithreaded C++ Remote Shell server that simulates isolated terminal sessions for multiple users. Built using raw POSIX sockets, Boost threads, and custom signal handling, with RESTful APIs powered by Crow for real-time session introspection and system monitoring.
+A multithreaded C++ Remote Shell server that simulates isolated terminal sessions for multiple users. Built using raw POSIX sockets, Boost threads, and signal-safe architecture, with RESTful APIs powered by Crow for real-time session introspection and system monitoring.
 
 ## 🚀 Features
 
 - 🔐 **Virtual Terminal Spaces**: Each user gets a separate shell-like environment, isolated from others.
 - ⚙️ **Multithreaded Server**: Handles multiple client sessions in parallel using `std::thread`.
-- 📡 **POSIX Sockets**: Low-level socket programming to simulate a secure shell.
-- 🌐 **Crow REST API**: Real-time status endpoints with `GET /ping` and room for session stats and management.
+- 📡 **POSIX Sockets**: Low-level socket programming to simulate a secure shell behavior.
+- 🌐 **Crow REST API**: `GET /ping`, with extensibility for session stats and management.
 - 🧠 **Signal-Safe Shutdown**: Custom `SIGINT` and `SIGPIPE` handlers for graceful termination.
 - 📈 **Color-coded CLI**: Styled output using ANSI escape codes for better UX.
 
@@ -35,17 +35,22 @@ A multithreaded C++ Remote Shell server that simulates isolated terminal session
 ```bash
 git clone https://github.com/yourusername/remote-shell.git
 cd remote-shell
-chmod +x build_and_run.sh
-./build_and_run.sh
+chmod +x run.sh (For faster builds run ./Minimal run.sh)
+./run.sh
 ```
 
-> `build_and_run.sh` handles building with CMake and launching both the shell server and REST interface.
+> `run.sh` handles building with CMake and launching both the shell server and REST interface.
 
 ### 🌐 REST API (Port 8081)
-
-- `GET /ping` → `{ "message": "Ping successful" }`
+- GET /ping → { "message": "Ping successful" }
 
 ### 🖧 Shell Client (Port 8080)
+- Once connected, you can run commands like:
+    - ⚠️ Default ports are 8080 (shell) and 8081 (REST). Ensure they're free before running.
+    - You can customize them by setting `shellPort` and `restPort` in the main.cpp file.
+
+```sh
+ ./run.sh  (For faster builds run ./Minimal run.sh)
 
 Once connected, you can run commands like:
 
@@ -76,10 +81,12 @@ uname -a
 - [ ] Container-based user isolation
 - [ ] Command history tracking
 
-## 📝 License
+## 📝 License and Platforms
 
-MIT License. Feel free to fork and customize!
+![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macOS-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
+
 
 > Made with ❤️ by Ronak
