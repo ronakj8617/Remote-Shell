@@ -15,8 +15,8 @@ TEST_CASE("CommandExecutor executes simple commands", "[command]") {
     }
 
     SECTION("Handles unknown commands gracefully") {
-        std::string output = executor.execute("nonexistentcommand");
-        REQUIRE(output.find("not found") != std::string::npos);
+        std::string output = executor.execute("ls1");
+        REQUIRE(((int)output.find("not found") != std::string::npos));
     }
 
     SECTION("Handles multi-word commands") {

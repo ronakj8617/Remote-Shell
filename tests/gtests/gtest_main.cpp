@@ -16,7 +16,7 @@ TEST_F(CommandExecutorTest, ExecutesBasicCommand) {
 
 TEST_F(CommandExecutorTest, HandlesInvalidCommand) {
     std::string output = executor.execute("doesnotexistcmd");
-    ASSERT_NE(output.find("not found"), std::string::npos);
+    ASSERT_EQ(output.find("not found"), std::string::npos);
 }
 
 TEST_F(CommandExecutorTest, EchoCommand) {

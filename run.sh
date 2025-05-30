@@ -28,7 +28,7 @@ if ! make; then
 fi
 
 if ! ctest; then
-      echo "❌ Test cases failed!"]
+      echo "❌ Test cases failed!"
       exit 1
 fi
 
@@ -37,7 +37,7 @@ if [ ! -f ./remoteshell ]; then
   exit 1
 fi
 
-echo "🚀 Running the remote shell..."
-./remoteshell
+echo "🚀 Running the remote shell (with default ports)..."
+./remoteshell # REST_PORT=9090 SHELL_PORT=9091 ./remoteshell
 
 #docker system prune -f

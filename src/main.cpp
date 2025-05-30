@@ -131,7 +131,8 @@ int main() {
     signal(SIGFPE, signal_handler); // signal floating-point exception
 
     crow::App<CORS> app;
-    int restPort = 8081, shellPort = 8080;
+    int restPort = std::getenv("REST_PORT") ? std::stoi(std::getenv("REST_PORT")) : 8081;
+    int shellPort = std::getenv("SHELL_PORT") ? std::stoi(std::getenv("SHELL_PORT")) : 8080;
 
     auto allow_cors = []() {
         crow::response res;

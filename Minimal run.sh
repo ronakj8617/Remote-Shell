@@ -7,7 +7,7 @@ clear
 
 echo " 🔨 Building docker..."
 if ! docker build -t remote-shell-image .; then
-      echo "❌ Doccker build failed!"]
+      echo "❌ Doccker build failed!"
       exit 1
 fi
 
@@ -33,7 +33,8 @@ if [ ! -f ./remoteshell ]; then
   exit 1
 fi
 
-echo "🚀 Running the remote shell..."
-./remoteshell
+echo "🚀 Running the remote shell (with default ports)..."
+./remoteshell #  REST_PORT=9090 SHELL_PORT=9091 ./remoteshell
+
 
 #docker system prune -f
